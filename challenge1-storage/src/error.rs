@@ -4,9 +4,13 @@ use std::fmt::{Display, Formatter};
 /// Unified error type for serializer-specific failures and empty storage reads.
 #[derive(Debug)]
 pub enum StorageError {
+    /// Attempted to load before any value was saved.
     EmptyStorage,
+    /// Serialization or deserialization failure from Borsh.
     Borsh(String),
+    /// Serialization or deserialization failure from Wincode.
     Wincode(String),
+    /// Serialization or deserialization failure from JSON.
     Json(String),
 }
 

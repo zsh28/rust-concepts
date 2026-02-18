@@ -20,6 +20,7 @@ impl TodoApp {
         let file_path = file_path.into();
         let mut queue = Queue::new();
 
+        // If a previous session exists, read and restore all tasks.
         if file_path.exists() {
             let bytes = fs::read(&file_path)?;
             if !bytes.is_empty() {
@@ -47,6 +48,7 @@ impl TodoApp {
 
     /// Enqueues a new task and persists immediately.
     pub fn add_task(&mut self, description: String) -> io::Result<Todo> {
+        // Assign monotonic id + capture creation time.
         let todo = Todo {
             id: self.next_id,
             description,
@@ -70,11 +72,19 @@ impl TodoApp {
         Ok(completed)
     }
 
+    /// Deletes a task at a zero-based position in FIFO order and persists immediately.
+    pub fn delete_at(&mut self, index: usize) -> io::Result<Option<Todo>> {
+        let deleted = self.queue.remove_at(index);
+        self.persist()?;
+        Ok(deleted)
+    }
+
     pub fn len(&self) -> usize {
         self.queue.len()
     }
 
     fn persist(&self) -> io::Result<()> {
+        // Persist as Vec<Todo> to keep on-disk format simple and stable.
         let todos: Vec<Todo> = self.queue.iter().cloned().collect();
         let bytes = borsh::to_vec(&todos)
             .map_err(|err| io::Error::new(io::ErrorKind::InvalidData, err.to_string()))?;

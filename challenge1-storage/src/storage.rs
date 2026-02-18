@@ -8,8 +8,11 @@ where
     T: StorageCompatible,
     S: Serializer,
 {
+    // Strategy object: controls *how* bytes are encoded/decoded.
     serializer: S,
+    // Raw payload. `None` means no value has been saved yet.
     bytes: Option<Vec<u8>>,
+    // Zero-sized marker that keeps T in the type system.
     marker: PhantomData<T>,
 }
 

@@ -1,3 +1,8 @@
+//! Challenge 1 library entrypoint.
+//!
+//! The code is split by responsibility so you can follow the data flow:
+//! model type -> serializer trait -> format adapter -> generic storage.
+
 pub mod compatible;
 pub mod error;
 pub mod formats;

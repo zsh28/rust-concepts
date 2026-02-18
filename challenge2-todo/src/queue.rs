@@ -36,6 +36,7 @@ impl<T> Queue<T> {
             return None;
         }
 
+        // Take from current head instead of shifting the whole vector.
         let value = self.items[self.head].take();
         self.head += 1;
         self.len -= 1;
@@ -67,6 +68,38 @@ impl<T> Queue<T> {
         self.items[self.head..].iter().filter_map(Option::as_ref)
     }
 
+    /// Removes and returns the item at a zero-based logical index from the queue front.
+    ///
+    /// `index = 0` removes the same item as `dequeue`.
+    pub fn remove_at(&mut self, index: usize) -> Option<T> {
+        if index >= self.len {
+            return None;
+        }
+
+        // Rebuild a compact queue while skipping the requested logical index.
+        // This keeps order and clears stale head slots in one pass.
+        let mut removed = None;
+        let mut compacted = Vec::with_capacity(self.len.saturating_sub(1));
+        let mut logical_index = 0usize;
+
+        for slot in &mut self.items[self.head..] {
+            if let Some(value) = slot.take() {
+                if logical_index == index {
+                    removed = Some(value);
+                } else {
+                    compacted.push(Some(value));
+                }
+                logical_index = logical_index.saturating_add(1);
+            }
+        }
+
+        self.items = compacted;
+        self.head = 0;
+        self.len = self.items.len();
+
+        removed
+    }
+
     fn compact_if_needed(&mut self) {
         if self.head == 0 {
             return;
@@ -79,6 +112,7 @@ impl<T> Queue<T> {
         }
 
         if self.head >= 64 && self.head * 2 >= self.items.len() {
+            // Drop consumed prefix once it becomes large relative to total storage.
             self.items = self.items.split_off(self.head);
             self.head = 0;
         }

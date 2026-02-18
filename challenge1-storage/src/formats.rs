@@ -8,6 +8,7 @@ impl Serializer for Borsh {
     where
         T: StorageCompatible,
     {
+        // borsh::to_vec encodes into a compact binary representation.
         borsh::to_vec(value).map_err(|err| StorageError::Borsh(err.to_string()))
     }
 
@@ -15,6 +16,7 @@ impl Serializer for Borsh {
     where
         T: StorageCompatible,
     {
+        // try_from_slice decodes bytes into T using Borsh derive rules.
         T::try_from_slice(bytes).map_err(|err| StorageError::Borsh(err.to_string()))
     }
 }
@@ -27,6 +29,7 @@ impl Serializer for Wincode {
     where
         T: StorageCompatible,
     {
+        // Wincode uses bincode-compatible binary bytes with its own fast impl.
         wincode::serialize(value).map_err(|err| StorageError::Wincode(err.to_string()))
     }
 
@@ -34,6 +37,7 @@ impl Serializer for Wincode {
     where
         T: StorageCompatible,
     {
+        // Deserialize with the same schema-derived type information.
         wincode::deserialize(bytes).map_err(|err| StorageError::Wincode(err.to_string()))
     }
 }
@@ -46,6 +50,7 @@ impl Serializer for Json {
     where
         T: StorageCompatible,
     {
+        // JSON encoding is text-based and human-readable.
         serde_json::to_vec(value).map_err(|err| StorageError::Json(err.to_string()))
     }
 
@@ -53,6 +58,7 @@ impl Serializer for Json {
     where
         T: StorageCompatible,
     {
+        // Parse JSON bytes back into T.
         serde_json::from_slice(bytes).map_err(|err| StorageError::Json(err.to_string()))
     }
 }

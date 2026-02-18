@@ -22,6 +22,8 @@ This package implements a CLI todo app with a custom generic FIFO queue and Bors
   - `TodoApp` service: load, persist, add, list, complete.
 - `src/main.rs`
   - CLI entry point and command parsing.
+- `src/tui.rs`
+  - Ratatui interactive interface and keyboard event loop.
 - `tests/queue_tests.rs`
   - FIFO behavior tests for the queue.
 - `tests/app_tests.rs`
@@ -43,9 +45,23 @@ cargo test -p challenge2-todo
 ## Run the CLI
 
 ```bash
+cargo run -p challenge2-todo --bin todo
+cargo run -p challenge2-todo --bin todo -- interactive
 cargo run -p challenge2-todo --bin todo -- add "Buy groceries"
 cargo run -p challenge2-todo --bin todo -- list
 cargo run -p challenge2-todo --bin todo -- done
 ```
 
 By default, this writes `todos.bin` in your current working directory.
+
+When run with no command (or with `interactive`), the app opens a ratatui interface.
+
+Ratatui controls:
+
+- `a` add task (input mode)
+- `Enter` submit task in input mode
+- `Esc` cancel input mode
+- `d` complete next task (FIFO)
+- `x` or `Delete` delete currently selected task
+- `j` / `k` or arrow keys to move highlight
+- `q` quit

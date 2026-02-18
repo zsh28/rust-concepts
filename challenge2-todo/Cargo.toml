@@ -9,3 +9,5 @@ path = "src/main.rs"
 
 [dependencies]
 borsh = { version = "1.6.0", features = ["derive"] }
+crossterm = "0.29.0"
+ratatui = "0.30.0"

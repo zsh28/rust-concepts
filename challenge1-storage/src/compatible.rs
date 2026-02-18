@@ -3,6 +3,11 @@ use serde::{Deserialize, Serialize};
 use wincode::config::DefaultConfig;
 
 /// Shared trait bound for data that can be serialized in all required formats.
+///
+/// Why this exists:
+/// - keeps generic method signatures short
+/// - enforces all required derives in one place
+/// - guarantees a `Storage<T, S>` value can switch serializers safely
 pub trait StorageCompatible:
     BorshSerialize
     + BorshDeserialize

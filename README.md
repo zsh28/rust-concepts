@@ -36,6 +36,8 @@ cargo test -p challenge2-todo
 Run todo CLI (challenge 2):
 
 ```bash
+cargo run -p challenge2-todo --bin todo
+cargo run -p challenge2-todo --bin todo -- interactive
 cargo run -p challenge2-todo --bin todo -- add "Buy groceries"
 cargo run -p challenge2-todo --bin todo -- list
 cargo run -p challenge2-todo --bin todo -- done
