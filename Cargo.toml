@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "challenge1-storage",
+    "challenge2-todo",
+]
+resolver = "2"

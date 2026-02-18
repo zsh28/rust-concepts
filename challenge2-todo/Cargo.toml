@@ -1,0 +1,11 @@
+[package]
+name = "challenge2-todo"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "todo"
+path = "src/main.rs"
+
+[dependencies]
+borsh = { version = "1.6.0", features = ["derive"] }
