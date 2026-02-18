@@ -27,19 +27,27 @@ This package implements a generic `Storage<T, S>` system that can save/load valu
 - `src/models.rs`
   - `Person` sample type used for tests.
 - `tests/storage_tests.rs`
-  - Round-trip tests for Borsh, Wincode, and JSON.
+  - Round-trip tests and cross-serializer conversion tests.
+- `benches/serialization_bench.rs`
+  - Criterion benchmarks for serialize/deserialize, `Storage` save/load, and serializer conversion at multiple payload sizes.
 
 ## How the pieces connect
 
 1. `Storage<T, S>` stores raw bytes internally.
 2. `S: Serializer` decides how bytes are produced/consumed.
 3. `T: StorageCompatible` ensures the type works across all required formats.
-4. `save` serializes `T -> Vec<u8>`, and `load` deserializes `Vec<u8> -> T`.
+4. `save` serializes `T -> Vec<u8>`, `load` deserializes `Vec<u8> -> T`, and `convert_to` migrates stored data between serializers.
 
 ## Run tests for this package
 
 ```bash
 cargo test -p challenge1-storage
+```
+
+## Run benchmarks for this package
+
+```bash
+cargo bench -p challenge1-storage
 ```
 
 ## Optional quick usage snippet

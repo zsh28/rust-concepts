@@ -46,4 +46,15 @@ where
     pub fn has_data(&self) -> bool {
         self.bytes.is_some()
     }
+
+    /// Converts the currently stored value into storage that uses another serializer.
+    pub fn convert_to<S2>(&self, serializer: S2) -> Result<Storage<T, S2>, StorageError>
+    where
+        S2: Serializer,
+    {
+        let value = self.load()?;
+        let mut converted = Storage::<T, S2>::new(serializer);
+        converted.save(&value)?;
+        Ok(converted)
+    }
 }
